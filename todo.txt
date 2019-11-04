@@ -1,0 +1,1 @@
+- add splice to delete bullets when they hit the tiles and or go out of the canvas to reduce lag

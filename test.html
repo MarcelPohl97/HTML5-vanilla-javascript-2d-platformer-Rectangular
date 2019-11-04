@@ -1,0 +1,70 @@
+<body>
+    <canvas width="640" height="360">
+      Your browser does not support HTML5 canvas
+    </canvas>
+</body>
+
+<script type="text/javascript">
+// setup of the canvas
+
+window.addEventListener('load', eventWindowLoaded, false);
+var canvas = document.querySelector('canvas');
+var ctx = canvas.getContext('2d');
+
+function eventWindowLoaded() {  
+canvasDraw();
+}
+
+var x = 50;
+var y = 50;
+
+function canvasDraw() { 
+ctx.fillStyle = "black";
+ctx.fillRect(0,0,canvas.clientWidth,canvas.clientHeight);
+ctx.fillStyle = "#f00";  
+ctx.beginPath();
+ctx.arc(x,y,20,0,degToRad(360), true);
+ctx.fill();
+}
+
+// pointer lock object forking for cross browser
+canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
+document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+
+canvas.onclick = function() {
+canvas.requestPointerLock();
+}
+
+// pointer lock event listeners
+// Hook pointer lock state change events for different browsers
+document.addEventListener('pointerlockchange', lockChangeAlert, false);
+document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
+
+function lockChangeAlert() {
+if(document.pointerLockElement === canvas ||
+document.mozPointerLockElement === canvas) {
+  console.log('The pointer lock status is now locked');
+  document.addEventListener("mousemove", canvasLoop, false);
+} else {
+  console.log('The pointer lock status is now unlocked');  
+  document.removeEventListener("mousemove", canvasLoop, false);
+}
+}
+
+
+function canvasLoop(e) {
+var movementX = e.movementX || e.mozMovementX || 0;
+var movementY = e.movementY || e.mozMovementY ||  0;
+x += movementX;
+y += movementY; 
+canvasDraw();
+console.log("X position: " + x + ', Y position: ' + y);
+}
+
+// helper function
+function degToRad(degrees) {
+var result = Math.PI/180 * degrees;
+return result;
+}   
+</script>
+</html>
